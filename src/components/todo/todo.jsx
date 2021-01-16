@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 class TodoApp extends Component {
     constructor(props) {
@@ -11,9 +11,14 @@ class TodoApp extends Component {
             <div>
                 <Router>
                     <>
-                        <Route path="/" exact component={LoginComponent} />
-                        <Route path="/login" component={LoginComponent} />
-                        <Route path="/welcome" component={WelcomeComponent} />
+                        <Switch>
+
+                            <Route path="/" exact component={LoginComponent} />
+                            <Route path="/login" component={LoginComponent} />
+                            <Route path="/welcome/:name" component={WelcomeComponent} />
+                            <Route path="/todo" component={TODO} />
+                            <Route component={ErrorComponent} />
+                        </Switch>
                     </>
                 </Router>
             </div>
@@ -71,7 +76,7 @@ class LoginComponent extends Component {
     login() {
         // console.log('login clicked..', this.state.unname, '/', this.state.pword)
         if (this.state.unname === 'in28mins' && this.state.pword === 'dummy') {
-            this.props.history.push('/welcomesdf')
+            this.props.history.push(`/welcome/${this.state.unname}`)
             console.log('Login Success')
             this.setState({
                 loginSuccess: true,
@@ -103,16 +108,16 @@ class LoginComponent extends Component {
         </div>);
     }
 }
-/* 
+/*
 function ShowInvalidLogin(props) {
-    console.log('Inside ...', props.loginSuccess1, '=', props.loginFailed1);
-    if (props.loginSuccess1)
-        return <div>Login successful</div>
-    if (props.loginFailed1) {
-        return <div>Invalid credentials</div>
-    }
-    return null;
-} */
+            console.log('Inside ...', props.loginSuccess1, '=', props.loginFailed1);
+        if (props.loginSuccess1)
+return <div>Login successful</div>
+        if (props.loginFailed1) {
+return <div>Invalid credentials</div>
+        }
+        return null;
+    } */
 
 class WelcomeComponent extends Component {
     constructor(props) {
@@ -120,8 +125,24 @@ class WelcomeComponent extends Component {
         this.state = {}
     }
     render() {
-        return (<div>Welcome to My ToDo application</div>);
+        return (<div>Hi {this.props.match.params.name}! Welcome to My ToDo application</div>);
     }
+}
+
+class TODO extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {}
+    }
+    render() {
+        return (<div>My To Dos</div>);
+    }
+}
+
+
+
+function ErrorComponent() {
+    return (<div>Error happened</div>)
 }
 
 
