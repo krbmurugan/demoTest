@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import FirstComponent from './components/learn/firstAndSecond';
 import Counter from './components/counter/counter'
+import TodoApp from './components/todo/todo'
 import axios from 'axios';
 import './App.css';
 
@@ -23,7 +24,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Counter />
+        {/* <Counter /> */}
+        <TodoApp />
       </div>
     );
   }
