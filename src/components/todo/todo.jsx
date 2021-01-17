@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
 
 class TodoApp extends Component {
     constructor(props) {
@@ -11,6 +11,7 @@ class TodoApp extends Component {
             <div>
                 <Router>
                     <>
+                        <HeaderComponent />
                         <Switch>
 
                             <Route path="/" exact component={LoginComponent} />
@@ -19,6 +20,7 @@ class TodoApp extends Component {
                             <Route path="/todo" component={TODO} />
                             <Route component={ErrorComponent} />
                         </Switch>
+                        <FooterComponent />
                     </>
                 </Router>
             </div>
@@ -125,19 +127,65 @@ class WelcomeComponent extends Component {
         this.state = {}
     }
     render() {
-        return (<div>Hi {this.props.match.params.name}! Welcome to My ToDo application</div>);
+        return (<div>Hi {this.props.match.params.name}! Welcome to My ToDo application. Click <Link to='/todo'>here</Link> to view my Todo list</div>);
     }
 }
 
 class TODO extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            todos: [
+                { id: 1, description: 'React', duration: '2Months', done: false, targetDate: new Date() },
+                { id: 2, description: 'Spring Boot', duration: '3Months', done: false, targetDate: new Date() },
+                { id: 3, description: 'AWS', duration: '1Month', done: false, targetDate: new Date() }
+            ]
+        }
+    }
+    render() {
+        return (
+            <div>
+                My Todos
+                <table>
+                    <thead><tr><th>Id</th><th>Description</th><th>Duration</th>
+                        <th>Is Completed?</th>
+                        <th>Target Date</th></tr></thead>
+                    {this.state.todos.map(todo => (
+                        <tr>
+                            <td>{todo.id}</td>
+                            <td>{todo.description}</td>
+                            <td>{todo.duration}</td>
+                            <td>{todo.done.toString()}</td>
+                            <td>{todo.targetDate.toString()}</td>
+                        </tr>
+                    )
+                    )}
+                </table>
+            </div>
+        );
+    }
+}
+
+class HeaderComponent extends Component {
+    constructor(props) {
+        super(props);
         this.state = {}
     }
     render() {
-        return (<div>My To Dos</div>);
+        return (<div>Header<hr /></div>);
     }
 }
+
+class FooterComponent extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {}
+    }
+    render() {
+        return (<div><hr />Footer</div>);
+    }
+}
+
 
 
 
