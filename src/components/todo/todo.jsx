@@ -18,6 +18,7 @@ class TodoApp extends Component {
                             <Route path="/login" component={LoginComponent} />
                             <Route path="/welcome/:name" component={WelcomeComponent} />
                             <Route path="/todo" component={TODO} />
+                            <Route path="/logout" component={LogoutComponent} />
                             <Route component={ErrorComponent} />
                         </Switch>
                         <FooterComponent />
@@ -105,7 +106,7 @@ class LoginComponent extends Component {
 
             Username<input type='text' name='unname' value={this.state.unname} onChange={this.handleChange} />
             Password <input type='password' name='pword' value={this.state.pword} onChange={this.handleChange} />
-            <button name='Login' value='Login' onClick={this.login}>Login</button>
+            <button className="btn btn-success" name='Login' value='Login' onClick={this.login}>Login</button>
 
         </div>);
     }
@@ -131,6 +132,17 @@ class WelcomeComponent extends Component {
     }
 }
 
+class LogoutComponent extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {}
+    }
+    render() {
+        return (<div className="container">Logged out successfully.
+            Click <Link to='/login'>here</Link> to login back</div>);
+    }
+}
+
 class TODO extends Component {
     constructor(props) {
         super(props);
@@ -146,22 +158,24 @@ class TODO extends Component {
         return (
             <div>
                 My Todos
-                <table>
-                    <thead><tr><th>Id</th><th>Description</th><th>Duration</th>
-                        <th>Is Completed?</th>
-                        <th>Target Date</th></tr></thead>
-                    {this.state.todos.map(todo => (
-                        <tr>
-                            <td>{todo.id}</td>
-                            <td>{todo.description}</td>
-                            <td>{todo.duration}</td>
-                            <td>{todo.done.toString()}</td>
-                            <td>{todo.targetDate.toString()}</td>
-                        </tr>
-                    )
-                    )}
-                </table>
-            </div>
+                <div className="container">
+                    <table className="table">
+                        <thead><tr><th>Id</th><th>Description</th><th>Duration</th>
+                            <th>Is Completed?</th>
+                            <th>Target Date</th></tr></thead>
+                        {this.state.todos.map(todo => (
+                            <tr>
+                                <td>{todo.id}</td>
+                                <td>{todo.description}</td>
+                                <td>{todo.duration}</td>
+                                <td>{todo.done.toString()}</td>
+                                <td>{todo.targetDate.toString()}</td>
+                            </tr>
+                        )
+                        )}
+                    </table>
+                </div >
+            </div >
         );
     }
 }
@@ -172,7 +186,22 @@ class HeaderComponent extends Component {
         this.state = {}
     }
     render() {
-        return (<div>Header<hr /></div>);
+        return (
+            <header>
+                <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+                    <div className="navbar-brand">Redsoil</div>
+                    <ul className="navbar-nav">
+                        <li><Link to="/welcome/bala" className="nav-link">Home</Link></li>
+                        <li><Link to="/todo" className="nav-link"> Todos</Link></li>
+                    </ul>
+                    <ul className="navbar-nav navbar-collapse justify-content-end">
+                        <li><Link to="/login" className="nav-link"> Login</Link></li>
+                        <li><Link to="/logout" className="nav-link"> Logout</Link></li>
+
+                    </ul>
+                </nav>
+            </header>
+        );
     }
 }
 

@@ -4,7 +4,8 @@ import Counter from './components/counter/counter'
 import TodoApp from './components/todo/todo'
 import axios from 'axios';
 import './App.css';
-import './bootstrap.css';
+// import './bootstrap.css';
+import "bootstrap/dist/css/bootstrap.css";
 
 class App extends Component {
 
