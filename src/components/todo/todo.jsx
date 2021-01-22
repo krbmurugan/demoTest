@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
 import AuthenticationService from './AuthenticationService.js'
-
+import AuthenticatedRouter from './AuthenticatedRoute.jsx';
+import LoginComponent from './LoginComponent.jsx';
+import HeaderComponent from './HeaderComponent';
+import WelcomeComponent from './WelcomeComponent';
 class TodoApp extends Component {
     constructor(props) {
         super(props);
@@ -17,8 +20,8 @@ class TodoApp extends Component {
 
                             <Route path="/" exact component={LoginComponent} />
                             <Route path="/login" component={LoginComponent} />
-                            <Route path="/welcome/:name" component={WelcomeComponent} />
-                            <Route path="/todo" component={TODO} />
+                            <AuthenticatedRouter path="/welcome/:name" component={WelcomeComponent} />
+                            <AuthenticatedRouter path="/todo" component={TODO} />
                             <Route path="/logout" component={LogoutComponent} />
                             <Route component={ErrorComponent} />
                         </Switch>
@@ -31,88 +34,7 @@ class TodoApp extends Component {
     }
 }
 
-class LoginComponent extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            unname: 'in28mins',
-            pword: '',
-            loginSuccess: false,
-            loginFailed: false
-        }
-        this.handleUNameChange = this.handleUNameChange.bind(this)
-        this.handlePWordChange = this.handlePWordChange.bind(this)
-        this.handleChange = this.handleChange.bind(this);
-        this.login = this.login.bind(this);
 
-    }
-
-    handlePWordChange(event) {
-        console.log(event.target.value);
-        this.setState({ pword: event.target.value });
-
-    }
-
-    handleUNameChange(event) {
-        // console.log(event.target.value);
-        this.setState({ unname: event.target.value });
-
-    }
-
-    handleChange(event) {
-        //when using common handle change method, note the state variable name is name as the form element name
-        /* 
-        this.state = {
-            unname: 'in28minsss',
-            pword: ''
-        }
-        <input type='text' name='unname'
-        <input type='password' name='pword'
-         */
-        // console.log(event.target.name, '==', event.target.value, this.state);
-        this.setState({
-            [event.target.name]: event.target.value
-        })
-        // console.log(this.state)
-
-    }
-
-    login() {
-        // console.log('login clicked..', this.state.unname, '/', this.state.pword)
-        if (this.state.unname === 'in28mins' && this.state.pword === 'dummy') {
-            AuthenticationService.registerSuccessfulLogin(this.state.unname, this.state.pword)
-            this.props.history.push(`/welcome/${this.state.unname}`)
-            console.log('Login Success')
-            this.setState({
-                loginSuccess: true,
-                loginFailed: false
-            })
-        }
-        else {
-            console.log('Invalid credentials')
-            this.setState({
-                loginSuccess: false,
-                loginFailed: true
-            })
-        }
-
-    }
-
-
-    render() {
-        return (<div>
-
-            {/* <ShowInvalidLogin loginSuccess1={this.state.loginSuccess} loginFailed1={this.state.loginFailed} /> */}
-            {this.state.loginSuccess && <div>Login successful</div>}
-            {this.state.loginFailed && <div>Invalid credentials</div>}
-
-            Username<input type='text' name='unname' value={this.state.unname} onChange={this.handleChange} />
-            Password <input type='password' name='pword' value={this.state.pword} onChange={this.handleChange} />
-            <button className="btn btn-success" name='Login' value='Login' onClick={this.login}>Login</button>
-
-        </div>);
-    }
-}
 /*
 function ShowInvalidLogin(props) {
             console.log('Inside ...', props.loginSuccess1, '=', props.loginFailed1);
@@ -124,15 +46,7 @@ return <div>Invalid credentials</div>
         return null;
     } */
 
-class WelcomeComponent extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {}
-    }
-    render() {
-        return (<div>Hi {this.props.match.params.name}! Welcome to My ToDo application. Click <Link to='/todo'>here</Link> to view my Todo list</div>);
-    }
-}
+
 
 class LogoutComponent extends Component {
     constructor(props) {
@@ -140,7 +54,7 @@ class LogoutComponent extends Component {
         this.state = {}
     }
     render() {
-        return (<div className="container">Logged out successfully.
+        return (<div className="container" >Logged out successfullydd.
             Click <Link to='/login'>here</Link> to login back</div>);
     }
 }
@@ -178,31 +92,6 @@ class TODO extends Component {
                     </table>
                 </div >
             </div >
-        );
-    }
-}
-
-class HeaderComponent extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {}
-    }
-    render() {
-        return (
-            <header>
-                <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-                    <div className="navbar-brand">Redsoil</div>
-                    <ul className="navbar-nav">
-                        <li><Link to="/welcome/bala" className="nav-link">Home</Link></li>
-                        <li><Link to="/todo" className="nav-link"> Todos</Link></li>
-                    </ul>
-                    <ul className="navbar-nav navbar-collapse justify-content-end">
-                        <li><Link to="/login" className="nav-link"> Login</Link></li>
-                        <li><Link to="/logout" className="nav-link"> Logout</Link></li>
-
-                    </ul>
-                </nav>
-            </header>
         );
     }
 }
