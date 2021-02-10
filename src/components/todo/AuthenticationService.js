@@ -1,19 +1,22 @@
 class AuthenticationService {
+  registerSuccessfulLogin(userName, password) {
+    console.log("In Authentication service...", userName);
+    sessionStorage.setItem("UserName", userName);
+  }
 
-    registerSuccessfulLogin(userName, password) {
-        console.log('In Authentication service...', userName);
-        sessionStorage.setItem('UserName', userName);
-    }
+  removeSessionUser(userName) {
+    console.log("Removing session user..", userName);
+    sessionStorage.removeItem("UserName");
+  }
 
-    removeSessionUser(userName) {
-        console.log('Removing session user..', userName)
-        sessionStorage.removeItem('UserName')
-    }
+  isUserLoggedIn() {
+    if (sessionStorage.getItem("UserName") === null) return false;
+    return true;
+  }
 
-    isUserLoggedIn() {
-        if (sessionStorage.getItem('UserName') === null) return false;
-        return true;
-    }
+  getLoggedInUser() {
+    return sessionStorage.getItem("UserName");
+  }
 }
 
 export default new AuthenticationService();
