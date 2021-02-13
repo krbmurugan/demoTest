@@ -6,6 +6,7 @@ import LoginComponent from "./LoginComponent.jsx";
 import HeaderComponent from "./HeaderComponent";
 import WelcomeComponent from "./WelcomeComponent";
 import TodoAPIService from "../../api/todo/TodoAPIService.js";
+import UpdTodoComponent from "./UpdTodoComp.jsx";
 class TodoApp extends Component {
   constructor(props) {
     super(props);
@@ -23,6 +24,11 @@ class TodoApp extends Component {
               <AuthenticatedRouter
                 path="/welcome/:name"
                 component={WelcomeComponent}
+              />
+
+              <AuthenticatedRouter
+                path="/todo/:id"
+                component={UpdTodoComponent}
               />
               <AuthenticatedRouter path="/todo" component={TODO} />
               <Route path="/logout" component={LogoutComponent} />
@@ -64,10 +70,12 @@ class LogoutComponent extends Component {
 
 class TODO extends Component {
   constructor(props) {
+    console.log("Constructor");
     super(props);
+
     this.state = {
       todos: [
-        {
+        /* {
           id: 1,
           description: "React",
           duration: "2Months",
@@ -87,12 +95,22 @@ class TODO extends Component {
           duration: "1Month",
           done: false,
           targetDate: new Date(),
-        },
+        }, */
       ],
+      message: null,
     };
+    this.deletTodoClicked = this.deletTodoClicked.bind(this);
+    this.updTodoClicked = this.updTodoClicked.bind(this);
+    this.refreshTodos = this.refreshTodos.bind(this);
+    this.addTodoClicked = this.addTodoClicked.bind(this);
   }
 
   componentDidMount() {
+    console.log("componentDidMount");
+    this.refreshTodos();
+  }
+
+  refreshTodos() {
     TodoAPIService.getTodosForUser(
       AuthenticationService.getLoggedInUser()
     ).then((resp) => {
@@ -115,10 +133,42 @@ class TODO extends Component {
       this.setState({ todos: userTodos });
     });
   }
+
+  componentWillUnmount() {
+    console.log("componentWillUnmount");
+  }
+
+  shouldComponentUpdate() {
+    console.log("shouldComponentUpdate");
+    return true;
+  }
+
+  deletTodoClicked(usernName, todoId) {
+    console.log(usernName, "==", todoId);
+    TodoAPIService.deleteUserTodo(usernName, todoId).then((resp) => {
+      this.setState({ message: `Delete of Todo ${todoId} successful` });
+      this.refreshTodos();
+    });
+  }
+
+  updTodoClicked(userName, todoId) {
+    console.log("Updated clicked %s and the id %d", userName, todoId);
+    this.props.history.push(`/todo/${todoId}`);
+  }
+
+  addTodoClicked() {
+    console.log("Add todo clicked..");
+    this.props.history.push(`/todo/0`);
+  }
+
   render() {
+    console.log("Render");
     return (
       <div>
         My Todos
+        {this.state.message && (
+          <div className="alert alert-success">{this.state.message}</div>
+        )}
         <div className="container">
           <table className="table">
             <thead>
@@ -137,10 +187,44 @@ class TODO extends Component {
                 <td>{todo.duration}</td>
                 <td>{todo.done.toString()}</td>
                 <td>{todo.targetDate.toString()}</td>
+                <td>
+                  <button
+                    className="btn btn-success"
+                    onClick={() =>
+                      this.updTodoClicked(
+                        AuthenticationService.getLoggedInUser(),
+                        todo.id
+                      )
+                    }
+                  >
+                    Update
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className="btn btn-warning"
+                    onClick={() =>
+                      this.deletTodoClicked(
+                        AuthenticationService.getLoggedInUser(),
+                        todo.id
+                      )
+                    }
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </table>
         </div>
+        <button
+          className="btn btn-success"
+          onClick={() =>
+            this.addTodoClicked(AuthenticationService.getLoggedInUser())
+          }
+        >
+          Add a Todo
+        </button>
       </div>
     );
   }
