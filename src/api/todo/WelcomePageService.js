@@ -15,9 +15,16 @@ class WelcomePageService {
   }
 
   getWelcomeMessageWithQueryParam(msg) {
-    console.log("Inside getWelcomeMessageWithQueryParam");
-    return axios.get(`http://localhost:5000/withqueryparam?username=${msg}`);
-    // return axios.get(path)
+    let username = "in28mins";
+    let password = "dummy";
+    let basicAuthHeader = "Basic " + window.btoa(username + ":" + password);
+    console.log("Inside getWelcomeMessageWithQueryParam", basicAuthHeader);
+    return axios.get(`http://localhost:5000/withqueryparam?username=${msg}`, {
+      headers: {
+        authorization: basicAuthHeader,
+      },
+    });
+    //return axios.get(path)
   }
 }
 
